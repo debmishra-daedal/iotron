@@ -1,0 +1,37 @@
+# Ignore Python cache files
+**/__pycache__/
+*.pyc
+*.pyo
+**/poetry.lock
+
+# Ignore virtual environments
+.venv/
+env/
+*.env
+
+# Ignore the docker build and compose files
+dockerfile
+docker-compose.yml
+docker-compose.override.yml
+docker-compose.override.yaml
+
+# Ignore version control files
+.git/
+.gitignore
+
+# Ignore editor and IDE files
+.vscode/
+*.code-workspace
+
+# Ignore build artifacts
+build/
+dist/
+*.egg-info/
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+.DS_Store
+
+#Ignore database files
+*.db

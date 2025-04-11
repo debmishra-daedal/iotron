@@ -1,3 +1,5 @@
 #vs code workspace settings
 .vscode/
 *.code-workspace
+.qodo
+*.db
