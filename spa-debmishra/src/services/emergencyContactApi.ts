@@ -13,7 +13,7 @@ export interface Contact {
 export async function fetchContacts(): Promise<Contact[]> {
   try {
     const response = await axios.get<Contact[]>(
-      "http://localhost:8000/emergency-contacts/data"
+      "https://debmishra.me/api/v1/emergency-contacts/data"
     );
     // Map API response keys to match the Contact interface
     const mappedContacts: Contact[] = response.data.map((contact: any) => ({

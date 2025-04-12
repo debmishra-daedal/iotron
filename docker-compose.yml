@@ -1,0 +1,59 @@
+networks:
+  traefik-network:
+    name: iotron-traefik-network
+
+services:
+  # Run main traefik service. Will be used used to route traffic to other services.
+  iotron-rp-traefik:
+    image: traefik:v2.10
+    container_name: iotron-rp-traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9000:8080" # Dashboard
+      - "8800:8800" # API
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/traefik.yml:/etc/traefik/traefik.yml # Mount your config file
+      - ./config/dynamic:/etc/traefik/dynamic
+      - ./config/acme.json:/acme.json # For Let's Encrypt certificates
+    networks:
+      - traefik-network
+
+  # Run the API service. This service will be used to run the gfiletosqlite API.
+  api-gfiletosqlite:
+    depends_on:
+      - iotron-rp-traefik
+    build:
+      context: ./gfiletosqlite
+      dockerfile: Dockerfile
+    container_name: iotron-api-gfiletosqlite
+    restart: unless-stopped
+    networks:
+      - traefik-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`debmishra.me`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.services.api.loadbalancer.server.port=8800"
+
+  # Add the Vue.js SPA
+  spa-debmishra:
+    depends_on:
+      - iotron-rp-traefik
+      - api-gfiletosqlite
+    build:
+      context: ./spa-debmishra
+      dockerfile: Dockerfile
+    container_name: iotron-spa-debmishra
+    restart: unless-stopped
+    networks:
+      - traefik-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.spa.rule=Host(`debmishra.me`) && !PathPrefix(`/api`)"
+      - "traefik.http.routers.spa.entrypoints=websecure"
+      - "traefik.http.routers.spa.tls=true"
+      - "traefik.http.services.spa.loadbalancer.server.port=80"

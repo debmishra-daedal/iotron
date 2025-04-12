@@ -53,11 +53,11 @@ def csv_to_sqlite(csv_content, db_file, table_name):
 def create_api(DB_FILE, TABLE_NAME):
     app = FastAPI()
 
-    @app.get("/emergency-contacts")
+    @app.get("/api/v1/emergency-contacts")
     def root():
         return {"message": "Emergency contacts API is running"}
 
-    @app.get("/emergency-contacts/data")
+    @app.get("/api/v1/emergency-contacts/data")
     def get_all_data():
         """Get all records from the database."""
         conn = sqlite3.connect(DB_FILE)
@@ -68,7 +68,7 @@ def create_api(DB_FILE, TABLE_NAME):
         conn.close()
         return data
 
-    @app.get("/emergency-contacts/data/{record_id}")
+    @app.get("/api/v1/emergency-contacts/data/{record_id}")
     def get_record(record_id: int):
         """Get a specific record by ID."""
         conn = sqlite3.connect(DB_FILE)

@@ -3,7 +3,7 @@ global:
   checkNewVersion: true
   sendAnonymousUsage: false
 
-# EntryPoints configuration
+# Entry points configuration
 entryPoints:
   web:
     address: ":80"
@@ -14,17 +14,24 @@ entryPoints:
           scheme: https
   websecure:
     address: ":443"
-  dashboard:
-    address: ":8080"
 
 # API and dashboard configuration
 api:
   dashboard: true
-  insecure: true  # For production, set to false and use proper authentication
+  insecure: true
 
-# Docker provider configuration
+# Providers configuration
 providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-    network: traefik_proxy
+    network: iotron-traefik-network
+
+# Certificate resolvers for Let's Encrypt
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: email@debmishra.me
+      storage: acme.json
+      httpChallenge:
+        entryPoint: web
