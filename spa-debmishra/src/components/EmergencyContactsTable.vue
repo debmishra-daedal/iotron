@@ -14,7 +14,7 @@
       </thead>
       <tbody>
         <tr v-for="(contact, index) in contacts" :key="index">
-          <td>{{ contact.id }}</td>
+          <td>{{ contact.id + 1 }}</td>
           <td>{{ contact.name }}</td>
           <td>{{ contact.mainPhone }}</td>
           <td>{{ contact.secondaryPhone }}</td>
