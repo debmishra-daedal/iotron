@@ -1,0 +1,23 @@
+version: "3.8"
+
+networks:
+  traefik-network:
+    name: iotron-traefik-network
+
+services:
+  traefik:
+    build:
+      context: ./rp-traefik
+      dockerfile: Dockerfile
+    container_name: iotron-rp-traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080" # Dashboard
+      - "8800:8800" # API
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./acme.json:/acme.json # For Let's Encrypt certificates
+    networks:
+      - traefik-network
